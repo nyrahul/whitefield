@@ -6,10 +6,10 @@ DIR=`realpath $DIR`
 BASE=$DIR/../..
 SHCMD="$BASE/scripts/wfshell"
 INVOKE_WF="$BASE/invoke_whitefield.sh"
-WAIT_ELAP_TIME=60
+WAIT_ELAP_TIME=120
 SAMPLE_INTERVAL=20
 SAMPLE_COUNT=60
-NUM_OF_RUNS=3
+NUM_OF_RUNS=5
 CFG_FILE=`realpath $1`
 LABEL="$2"
 
@@ -26,14 +26,41 @@ start_wf()
     $INVOKE_WF $CFG_FILE
 }
 
+shift_node()
+{
+    [[ "$1" == "" ]] && echo "need an arg" && return
+    org_pos=`$SHCMD cmd_node_position $1 | grep "loc=" | cut -d ' ' -f 3-6`
+    $SHCMD cmd_set_node_position $1 1000 1000
+    sleep 180
+    $SHCMD cmd_set_node_position $1 $org_pos
+}
+
+chg_node_pos()
+{
+    sleep $WAIT_ELAP_TIME
+    sleep 10
+    $SHCMD cmd_set_node_position 
+    TMP_FILE=def$$.txt
+    for((i=0;i<8;i++)); do
+        for n in `$SHCMD cmd_def_route  | grep "fe80::" | sed 's/.*://g'` ; do 
+            printf "%d\n" 0x$n 
+        done | sort -n | uniq -c | sort -n | tail -1 | tr -s ' ' | cut -d ' ' -f 3 > $TMP_FILE
+        nid=`cat $TMP_FILE`
+        rm $TMP_FILE
+        shift_node $nid
+    done
+}
+
 take_data()
 {
     [[ "$1" == "" ]] && echo "take_data requires label as input" && exit
     for((i=0;i<$NUM_OF_RUNS;i++)); do
         start_wf
+        #chg_node_pos &
         prn_time_info
         $BASE/scripts/get_connectivity_snapshot.sh -e $WAIT_ELAP_TIME -i $SAMPLE_INTERVAL -c $SAMPLE_COUNT -o $DIR/$LABEL/$1$i.csv
     done
+    wait
 }
 
 set_dco_conf()
@@ -57,8 +84,10 @@ prn_time_info()
 get_estimated_time
 mkdir -p $DIR/$LABEL 2>/dev/null
 cp $CFG_FILE $DIR/$LABEL/
-#set_dco_conf 0
-#take_data "npdao_"
 
 set_dco_conf 1
 take_data "dco_"
+
+set_dco_conf 0
+take_data "npdao_"
+

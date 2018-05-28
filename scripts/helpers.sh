@@ -118,6 +118,13 @@ stop_whitefield()
 	[[ $? -ne 0 ]] && echo "Problem stopping whitefield [$wfpid]" && return
 	echo "Stopped Whitefield"
 	sleep 1
+    for((i=0;i<5;i++)); do
+        pgrep -u `whoami` $WF_PNAME
+        [[ $? -eq 1 ]] && break
+        sleep 1
+    done
+    pgrep -u `whoami` $WF_PNAME
+    [[ $? -eq 0 ]] && echo "forcibly killing whitefield" && killall -9 $WF_PNAME $FORKER_PNAME
 	echo ;
 }
 
