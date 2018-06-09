@@ -1,3 +1,4 @@
+sl cmd_route_projection
 sl cmd_rpl_stats
 sl cmd_def_route
 sl cmd_route_table

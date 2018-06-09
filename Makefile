@@ -27,11 +27,13 @@ whitefield:
 	make -f src/utils/Makefile.utils all
 	make -f src/airline/Makefile.airline all
 
+ifneq ($(STACKLINE_RIOT),)
 riot:
 	make -C $(STACKLINE_RIOT)/tests/whitefield
 
 riot_clean:
 	make -C $(STACKLINE_RIOT)/tests/whitefield clean
+endif
 
 contiki:
 	make -C $(STACKLINE_CONTIKI)/examples/ipv6/rpl-udp TARGET=whitefield
@@ -39,9 +41,11 @@ contiki:
 contiki_clean:
 	make -C $(STACKLINE_CONTIKI)/examples/ipv6/rpl-udp TARGET=whitefield clean
 
+ifneq ($(STACKLINE_OPENTHREAD),)
 openthread:
 	if [ -d $(STACKLINE_OPENTHREAD) ]; then make -f src/stackline/wf_openthread/Makefile.openthread; fi
- 
+endif
+
 ns3:
 	make -C $(AIRLINE_NS3)
 

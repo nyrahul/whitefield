@@ -3,3 +3,4 @@ pcap/
 log/
 tags
 regression/testcase_report.log
+cscope.*
