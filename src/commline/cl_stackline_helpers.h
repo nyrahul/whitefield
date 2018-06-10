@@ -21,9 +21,18 @@
 #ifndef	_CL_STACKLINE_HELPERS_H_
 #define	_CL_STACKLINE_HELPERS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 int cl_get_id2longaddr(const uint16_t id, uint8_t *addr, const int addrlen);
 uint16_t cl_get_longaddr2id(const uint8_t *addr);
 int util_kv_parse(char *str, char *key[], char *val[], int max_kv);
 char *util_kv_get(const char *key, char *k[], char *v[], const int cnt);
+void sl_handle_cmd(msg_buf_t *mbuf);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif //_CL_STACKLINE_HELPERS_H_
