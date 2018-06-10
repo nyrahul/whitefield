@@ -137,3 +137,53 @@ void sl_handle_cmd(msg_buf_t *mbuf)
     cl_sendto_q(MTYPE(MONITOR, CL_MGR_ID), cbuf, cbuf->len+sizeof(msg_buf_t));
 }
 
+char *kv_parse_handle_val(char **ppVal)
+{
+    char *v=*ppVal, *ptr;
+    if(*v == '"') {
+        v++;
+        *ppVal = v;
+        while(*v != '"') {
+            if(*v == 0) return NULL;
+            //
+            v++;
+        }
+        *v++ = 0;
+    }
+    ptr = strchr(v, ';');
+    if(ptr) *ptr++ = 0;
+    return ptr;
+}
+
+int util_kv_parse(char *str, char *key[], char *val[], int max_kv)
+{
+    int kvi=0;
+    char *k, *v;
+
+    while(str && *str) 
+    {
+        k = str;
+        v = strchr(str, '=');
+        if(!v) {
+            return -1;
+        }
+        *v++ = 0;
+        str = kv_parse_handle_val(&v);
+        key[kvi] = k;
+        val[kvi] = v;
+        if(++kvi >= max_kv) {
+            return -1;
+        }
+    }
+    return kvi;
+}
+
+char *util_kv_get(const char *key, char *k[], char *v[], const int cnt)
+{
+    int i;
+    for(i=0; i<cnt; i++) {
+        if(!strcmp(key, k[i])) return v[i];
+    }
+    return NULL;
+}
+
