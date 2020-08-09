@@ -16,9 +16,9 @@ ifeq ($(REL),debug)
 CFLAGS+=-g
 endif
 
-$(info $$SRCS is [${SRCS}])
-$(info $$OBJS is [${OBJS}])
-$(info $$OBJS32 is [${OBJS32}])
+#$(info $$SRCS is [${SRCS}])
+#$(info $$OBJS is [${OBJS}])
+#$(info $$OBJS32 is [${OBJS32}])
 
 all: $(BINDIR)/$(SRC) $(TARGET) $(TARGET_32)
 

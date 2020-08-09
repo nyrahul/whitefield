@@ -139,6 +139,7 @@ chk_prerequisite()
 	chk_cmd_present jq
 	chk_cmd_present libtool
 	chk_cmd_present graphviz
+	chk_cmd_present coreutils
 }
 
 git_submodule_dload()
