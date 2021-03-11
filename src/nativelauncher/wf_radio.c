@@ -4,6 +4,7 @@
 #include <stdint.h>
 #include "contiki-ng-helper/contiki-ng-radio.h"
 #include "wpcap.h"
+#include "helpers.h"
 
 extern struct radio_driver nullradio_driver;
 
@@ -24,6 +25,7 @@ static int wf_prepare(const void *data, unsigned short len)
     extern void *g_pcap_handle;
     printf("Prepare len=%d\n", len);
     pcap_write(g_pcap_handle, data, len);
+    send_pkt2airline(data, len);
     return 1;
 }
 

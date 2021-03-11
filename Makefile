@@ -34,6 +34,7 @@ whitefield:
 	$(MAKE) -f src/commline/Makefile.commline all
 	$(MAKE) -f src/utils/Makefile.utils all
 	$(MAKE) -f src/airline/Makefile.airline all
+	$(MAKE) -f src/nativelauncher/Makefile all
 
 riot:
 	$(MAKE) -C $(STACKLINE_RIOT)/tests/whitefield
